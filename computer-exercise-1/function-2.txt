@@ -1,0 +1,70 @@
+Function 2:
+
+
+a)
+
+
+
+Steepest descent:
+
+(-2,-1)^T:
+
+Function value: 0.058814
+Solution point: (0.757571, 0.573264)^T
+No. itrations: 201 (max iterations)
+
+
+
+
+Newton, modified:
+
+(-2,-1)^T:
+
+Function value: 2.65683-11
+Solution point: (0.999995, 0.999991)^T
+No. itrations: 14
+
+
+
+
+Netown (Marquardt):
+
+(-2,-1)^T:
+
+Function value: 2.6568-11
+Solution point: (0.999995, 0.999991)^T
+No. itrations: 14
+
+
+
+
+Newton (unit step):
+
+(-2,-1)^T:
+
+Function value: 2.0031e-27
+Solution point: (1, 1)^T
+No. itrations: 5
+
+
+
+
+
+b)
+
+No. See calculation.
+
+
+
+c) 
+
+
+(0,2)^T:
+
+Function value: 4.1501e-09
+Solution point: (100006, 1.00013)^T
+No. itrations: 8
+
+An observation was that Newton's method takes larger steps for steeper slopes and smaller steps for gentle slopes. Say that the gradient has quadratic terms, then the Hessian must have linear terms. The gradient will therefore tend to get much larger than the Hessian for large values and tend to get much smaller than the Hessian for smaller values. Since we have f'/f'' this will result in the observation that was stated.
+
+

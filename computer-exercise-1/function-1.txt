@@ -1,0 +1,62 @@
+Function 1:
+
+
+a)
+
+
+
+Steepest descent:
+
+(10,10)^T:
+
+Function value: -11.1562
+Solution point: (-2.2491, -3.06255)^T
+No. itrations: 9
+
+(-5,-5)^T:
+
+Function value: -11.1562
+Solution point: (-2.25225, -3.06234)^T
+No. itrations: 9
+
+(10,-5)^T:
+
+Function value: -11.1562
+Solution point: (-2.24885, -3.06266)^T
+No. itrations: 16
+
+
+
+Newton (unit step):
+
+(10,10)^T:
+
+Function value: -11.1563
+Solution point: (-2.25, -3.0625)^T
+No. itrations: 1
+
+(-5,-5)^T:
+
+Function value: -11.1563
+Solution point: (-2.25, -3.0625)^T
+No. itrations: 1
+
+(10,-5)^T:
+
+Function value: -11.1563
+Solution point: (-2.25, -3.0625)^T
+No. itrations: 1
+
+
+
+
+b)
+
+The obtained point is first and foremost local. Because the objective function is convex, by the fundamental fheorem of global optimality we have that every local optimum is a global optimum. See calculation.
+
+
+
+c) 
+
+Newton's method considers the Hessian which contains information about the curvature of the function. Newton's method converges quadratically meaning that the error reduces quadratically. If the descent is steep smaller steps will be taken and larger steps for flater descents.
+If the function is perfectly quadratic the Newtown's method will converge in one iteration. See calculation.

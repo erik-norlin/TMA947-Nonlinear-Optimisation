@@ -1,0 +1,32 @@
+Function 4:
+
+
+a)
+
+
+
+Steepest descent:
+
+(0,0)^T:
+
+Function value: -58
+Solution point: (2.9978, 0.99993)^T
+No. itrations: 4
+
+
+
+
+Newton (unit step):
+
+(0,0)^T:
+
+Function value: 2.0031e-27
+Solution point: (1, 1)^T
+No. itrations: 5
+
+
+
+
+
+b)
+
