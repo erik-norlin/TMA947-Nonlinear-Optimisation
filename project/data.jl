@@ -1,4 +1,7 @@
-n_vars = 15 # Number of variables
+n_flows = 15 # Number of variables
+n_gen = 9
+n_cust = 7
+n_nodes = 11
 G_cap = [0.02, 0.15, 0.08, 0.07, 0.04, 0.17, 0.17, 0.26, 0.05] # Generator capacities
 G_cost = [175, 100, 150, 150, 300, 350, 400, 300, 200] # Generator costs
 C_dem = [0.1, 0.19, 0.11, 0.09, 0.21, 0.05, 0.04] # Customer demands
