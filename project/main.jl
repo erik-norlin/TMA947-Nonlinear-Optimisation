@@ -13,14 +13,30 @@ the_model = Model(Ipopt.Optimizer)
 @variable(the_model, C[i = 1:n_cust] >= C_dem[i])
 @variable(the_model, -pi <= theta[i = 1:n_nodes] <= pi)
 @variable(the_model, 0.98 <= v[i = 1:n_nodes] <= 1.02)
-@variable(the_model, p[i = 1:n_flows])
-@variable(the_model, q[i = 1:n_flows])
+# @variable(the_model, p[i = 1:n_flows])
+# @variable(the_model, q[i = 1:n_flows])
+@variable(the_model, p[i = 1:n_nodes, j = 1:n_nodes])
+@variable(the_model, q[i = 1:n_nodes, j = 1:n_nodes])
 
 
 # Objective function
 @NLobjective(the_model, Min, sum((Gp[i]*G_cost[i]) for i in 1:n_gen))
 
 
+# Netflow constraints from node k -> l
+for k in 1:n_nodes
+    for l in 1:n_nodes
+        # Mirroring the initial b and g arrays
+        if l > k
+            b[l,k] = b[k,l]
+            g[l,k] = g[k,l]
+        end
+        @NLconstraint(the_model, p[k,l] ==  (v[k]^2)*g[k,l] - v[k]*v[l]*g[k,l]*cos(theta[k]-theta[l]) - v[k]*v[l]*b[k,l]*sin(theta[k]-theta[l]))
+        @NLconstraint(the_model, q[k,l] == -(v[k]^2)*b[k,l] + v[k]*v[l]*b[k,l]*cos(theta[k]-theta[l]) - v[k]*v[l]*g[k,l]*sin(theta[k]-theta[l]))
+    end
+end
+
+#=
 # Netflow constraints from node k -> l
 # Active power
 @NLconstraint(the_model, p1, p[1] == g_kl[1]*(v[2]^2-v[1]^2) - 2*b_kl[1]*v[2]*v[1]*sin(theta[2]-theta[1])) # 2 -> 1
@@ -57,7 +73,7 @@ the_model = Model(Ipopt.Optimizer)
 @NLconstraint(the_model, q15, q[15] == b_kl[15]*(v[10]^2-v[11]^2) - 2*g_kl[15]*v[11]*v[10]*sin(theta[11]-theta[10])) # 11 -> 10
 
 
-# Flow balance constraints of every node: generated power - absorbed power = netinflow - netoutflow
+# Flow balance constraints of every node: generated power + incoming power = absorbed power
 # Active power
 @NLconstraint(the_model, np1, C[1] == p[1] + p[2])
 @NLconstraint(the_model, np2, Gp[1] + Gp[2] + Gp[3] == p[1] -p[3] -p[4])
@@ -83,6 +99,35 @@ the_model = Model(Ipopt.Optimizer)
 @NLconstraint(the_model, nq9, Gq[8] + Gq[9] == q[6] + q[12] + q[13] -q[14])
 @NLconstraint(the_model, nq10, 0 == -q[14] + q[15])
 @NLconstraint(the_model, nq11, 0 == -q[2] -q[4] -q[15])
+=#
+
+
+# Flow balance constraints for every node: generated power + incoming power = absorbed power
+# Active power
+@NLconstraint(the_model, np1, p[2,1] + p[11,1] == C[1])
+@NLconstraint(the_model, np2, Gp[1] + Gp[2] + Gp[3] + p[1,2] + p[11,2] + p[3,2] == 0)
+@NLconstraint(the_model, np3, Gp[4] + p[2,3] + p[4,3] + p[9,3] == 0)
+@NLconstraint(the_model, np4, Gp[5] + p[3,4] + p[5,4] == C[2])
+@NLconstraint(the_model, np5, Gp[6] + p[4,5] + p[6,5] + p[8,5] == 0)
+@NLconstraint(the_model, np6, p[5,6] + p[7,6] == C[3])
+@NLconstraint(the_model, np7, Gp[7] + p[6,7] + p[8,7] + p[9,7] == 0)
+@NLconstraint(the_model, np8, p[5,8] + p[7,8] + p[9,8] == C[4])
+@NLconstraint(the_model, np9, Gp[8] + Gp[9] + p[3,9] + p[7,9] + p[8,9] + p[10,9] == C[5])
+@NLconstraint(the_model, np10, p[9,10] + p[11,10] == C[6])
+@NLconstraint(the_model, np11, p[1,11] + p[2,11] + p[10,11] == C[7])
+
+# Reactive power
+@NLconstraint(the_model, nq1, q[2,1] + q[11,1] == 0)
+@NLconstraint(the_model, nq2, Gq[1] + Gq[2] + Gq[3] + q[1,2] + q[11,2] + q[3,2] == 0)
+@NLconstraint(the_model, nq3, Gq[4] + q[2,3] + q[4,3] + q[9,3] == 0)
+@NLconstraint(the_model, nq4, Gq[5] + q[3,4] + q[5,4] == 0)
+@NLconstraint(the_model, nq5, Gq[6] + q[4,5] + q[6,5] + q[8,5] == 0)
+@NLconstraint(the_model, nq6, q[5,6] + q[7,6] == 0)
+@NLconstraint(the_model, nq7, Gq[7] + q[6,7] + q[8,7] + q[9,7] == 0)
+@NLconstraint(the_model, nq8, q[5,8] + q[7,8] + q[9,8] == 0)
+@NLconstraint(the_model, nq9, Gq[8] + Gq[9] + q[3,9] + q[7,9] + q[8,9] + q[10,9] == 0)
+@NLconstraint(the_model, nq10, q[9,10] + q[11,10] == 0)
+@NLconstraint(the_model, nq11, q[1,11] + q[2,11] + q[10,11] == 0)
 
 
 # Print and optimize model
@@ -96,7 +141,17 @@ println("Termination statue: ", JuMP.termination_status(the_model))
 println("Optimal objective function value: ", JuMP.objective_value(the_model))
 println("Generators activ power: ", JuMP.value.(Gp[i] for i in 1:n_gen))
 println("Customers active power: ", JuMP.value.(C[i] for i in 1:n_cust))
-
+# println("Pkl: ", JuMP.value.(p[1,i] for i in 1:n_nodes))
+# println("Pkl: ", JuMP.value.(p[2,i] for i in 1:n_nodes))
+# println("Pkl: ", JuMP.value.(p[3,i] for i in 1:n_nodes))
+# println("Pkl: ", JuMP.value.(p[4,i] for i in 1:n_nodes))
+# println("Pkl: ", JuMP.value.(p[5,i] for i in 1:n_nodes))
+# println("Pkl: ", JuMP.value.(p[6,i] for i in 1:n_nodes))
+# println("Pkl: ", JuMP.value.(p[7,i] for i in 1:n_nodes))
+# println("Pkl: ", JuMP.value.(p[8,i] for i in 1:n_nodes))
+# println("Pkl: ", JuMP.value.(p[9,i] for i in 1:n_nodes))
+# println("Pkl: ", JuMP.value.(p[10,i] for i in 1:n_nodes))
+# println("Pkl: ", JuMP.value.(p[11,i] for i in 1:n_nodes))
 println("Dual variables/Lagrange multipliers corresponding to some of the constraints: ")
 # println(JuMP.dual.(SOS_constr))
 println(JuMP.dual.(JuMP.UpperBoundRef.(Gp)))
