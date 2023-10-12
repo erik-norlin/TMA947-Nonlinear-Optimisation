@@ -1,0 +1,37 @@
+We can see that to maximize the dual the term epsilon*y_n+1 has to be minimized since the term is positive (epsilon >= 0 and y_n+1 >= 0) 
+and that the minus will turn it negative.
+The minimum of this term is 0, so we have two cases
+
+y_n+1=0:
+Since y_n+1 is only multiplied with every element of the last row of Â (the row corresponding to the bounded sum), 
+this row will be omitted in the maximization of the dual.
+This would result in the same dual maximum as if the bounded sum never existed in the primal.
+
+epsilon=0:
+If epsilon is 0 then the bounded sum is 0 and there is no violation of the constraint in the primal.
+
+If both are zero
+
+Thus, the maximized dual either corresponds to the that the minimum of the primal 
+is the same as the minimum of the primal without the bounded sum,
+or that there is no violation of the constraints in the primal (epsilon=0).
+
+
+
+
+We can see that to maximize the dual the term epsilon*y_n+1 has to be minimized since the term is positive 
+(epsilon >= 0 and y_n+1 >= 0) and that the minus will turn it negative. 
+The minimum of this term is 0, so either epsilon or y_n+1 is 0.
+
+y_n+1=0:
+Since y_n+1 is multiplied with every element of the last row of Â (the row corresponding to the bounded sum), 
+this row will be omitted in the maximization of the dual.
+We also have that y_i=0 for all i. 
+This means that the max dual is 0.
+
+epsilon=0:
+This means that all v are 0 so the last row of Â is 0 in this case as well.
+The difference here is that all y must not be 0.
+This means that the max dual can potentially be larger or smaller than if epsilon > 0.
+
+
